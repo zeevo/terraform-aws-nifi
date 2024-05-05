@@ -66,6 +66,17 @@ resource "aws_security_group" "nodes" {
       prefix_list_ids  = []
       security_groups  = [aws_security_group.all.id]
       self             = true
+    },
+    {
+      description      = "Load Balance"
+      from_port        = 6342
+      to_port          = 6342
+      protocol         = "tcp"
+      cidr_blocks      = []
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = [aws_security_group.all.id]
+      self             = true
     }
   ]
 }
