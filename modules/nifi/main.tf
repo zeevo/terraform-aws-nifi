@@ -1,6 +1,6 @@
 resource "aws_key_pair" "ssh_key" {
-  key_name   = var.KEY_NAME
-  public_key = var.PUBLIC_KEY
+  key_name   = var.ssh_key_name
+  public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "node" {
@@ -8,10 +8,10 @@ resource "aws_instance" "node" {
   instance_type = "t2.medium"
   key_name      = aws_key_pair.ssh_key.key_name
   tags = {
-    Name = "nifi-${count.index}"
+    Name = "${var.nifi_name}-${count.index}"
     Role = "nifi"
   }
-  count = 2
+  count = var.nifi_node_count
   root_block_device {
     volume_size = 20
   }
@@ -22,7 +22,7 @@ resource "aws_instance" "zookeeper" {
   instance_type = "t2.medium"
   key_name      = aws_key_pair.ssh_key.key_name
   tags = {
-    Name = "zookeeper"
+    Name = "${var.zookeeper_name}"
     Role = "zookeeper"
   }
 }
@@ -112,13 +112,13 @@ resource "aws_security_group" "zookeeper" {
 resource "aws_network_interface_sg_attachment" "nifi_security_group_attachment" {
   security_group_id    = aws_security_group.nodes.id
   network_interface_id = aws_instance.node[count.index].primary_network_interface_id
-  count                = 2
+  count                = var.nifi_node_count
 }
 
 resource "aws_network_interface_sg_attachment" "all_nodes_security_group_attachement" {
   security_group_id    = aws_security_group.all.id
   network_interface_id = aws_instance.node[count.index].primary_network_interface_id
-  count                = 2
+  count                = var.nifi_node_count
 }
 
 resource "aws_network_interface_sg_attachment" "zookeeper_primary_security_group_attachment" {

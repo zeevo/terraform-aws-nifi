@@ -3,9 +3,10 @@ provider "aws" {
 }
 
 module "nifi" {
-  source     = "./modules/nifi"
-  KEY_NAME   = var.KEY_NAME
-  PUBLIC_KEY = var.PUBLIC_KEY
+  source          = "./modules/nifi"
+  ssh_key_name    = var.KEY_NAME
+  ssh_public_key  = var.PUBLIC_KEY
+  nifi_node_count = 50
 }
 
 variable "KEY_NAME" {
