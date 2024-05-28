@@ -22,9 +22,10 @@ resource "aws_instance" "zookeeper" {
   instance_type = "t2.medium"
   key_name      = aws_key_pair.ssh_key.key_name
   tags = {
-    Name = "${var.zookeeper_name}"
+    Name = "${var.zookeeper_name}-${count.index}"
     Role = "zookeeper"
   }
+  count = var.nifi_zookeeper_count
 }
 
 resource "aws_security_group" "all" {
@@ -96,9 +97,31 @@ resource "aws_security_group" "zookeeper" {
       self             = false
     },
     {
-      description      = "Zookeeper"
+      description      = "Zookeeper clients"
       from_port        = 2181
       to_port          = 2181
+      protocol         = "tcp"
+      cidr_blocks      = []
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = [aws_security_group.all.id]
+      self             = true
+    },
+    {
+      description      = "Zookeeper followers"
+      from_port        = 2888
+      to_port          = 2888
+      protocol         = "tcp"
+      cidr_blocks      = []
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = [aws_security_group.all.id]
+      self             = true
+    },
+    {
+      description      = "Zookeeper elections"
+      from_port        = 3888
+      to_port          = 3888
       protocol         = "tcp"
       cidr_blocks      = []
       ipv6_cidr_blocks = []
@@ -123,11 +146,13 @@ resource "aws_network_interface_sg_attachment" "all_nodes_security_group_attache
 
 resource "aws_network_interface_sg_attachment" "zookeeper_primary_security_group_attachment" {
   security_group_id    = aws_security_group.zookeeper.id
-  network_interface_id = aws_instance.zookeeper.primary_network_interface_id
+  network_interface_id = aws_instance.zookeeper[count.index].primary_network_interface_id
+  count                = var.nifi_zookeeper_count
 }
 
 resource "aws_network_interface_sg_attachment" "all_zookeeper_security_group_attachement" {
   security_group_id    = aws_security_group.all.id
-  network_interface_id = aws_instance.zookeeper.primary_network_interface_id
+  network_interface_id = aws_instance.zookeeper[count.index].primary_network_interface_id
+  count                = var.nifi_zookeeper_count
 }
 

@@ -11,6 +11,11 @@ variable "nifi_node_count" {
   default = 1
 }
 
+variable "nifi_zookeeper_count" {
+  type    = number
+  default = 1
+}
+
 variable "nifi_name" {
   type    = string
   default = "nifi"
