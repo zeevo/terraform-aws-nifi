@@ -4,8 +4,8 @@ resource "aws_key_pair" "ssh_key" {
 }
 
 resource "aws_instance" "node" {
-  ami           = "ami-058bd2d568351da34"
-  instance_type = "t2.medium"
+  ami           = var.nifi_ami
+  instance_type = var.nifi_instance_type
   key_name      = aws_key_pair.ssh_key.key_name
   tags = {
     Name = "${var.nifi_name}-${count.index}"
@@ -18,8 +18,8 @@ resource "aws_instance" "node" {
 }
 
 resource "aws_instance" "zookeeper" {
-  ami           = "ami-058bd2d568351da34"
-  instance_type = "t2.medium"
+  ami           = var.zookeeper_ami
+  instance_type = var.zookeeper_instance_type
   key_name      = aws_key_pair.ssh_key.key_name
   tags = {
     Name = "${var.zookeeper_name}-${count.index}"
