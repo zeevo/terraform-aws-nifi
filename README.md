@@ -1,4 +1,4 @@
-# terraform-nifi
+# terraform-aws-nifi
 
 ## Getting started
 
