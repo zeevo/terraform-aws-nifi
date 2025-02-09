@@ -48,8 +48,8 @@ resource "aws_security_group" "nodes" {
     },
     {
       description      = "Cluster"
-      from_port        = 8082
-      to_port          = 8082
+      from_port        = 11443
+      to_port          = 11443
       protocol         = "tcp"
       cidr_blocks      = []
       ipv6_cidr_blocks = []
