@@ -65,8 +65,8 @@ resource "aws_security_group" "nodes" {
       cidr_blocks      = ["0.0.0.0/0"]
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
-      security_groups  = [aws_security_group.all.id]
-      self             = true
+      security_groups  = []
+      self             = false
     },
     {
       description      = "Load Balance"
