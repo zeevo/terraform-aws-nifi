@@ -10,10 +10,12 @@ provider "aws" {
 }
 
 module "nifi" {
-  source          = "./modules/nifi"
-  ssh_key_name    = "my-aws-key-name"
-  ssh_public_key  = "ssh-ed25519 MYPUBLICKEY..."
-  nifi_node_count = 3
+  source               = "zeevo/nifi/aws"
+  version              = "0.1.0"
+  ssh_key_name         = "my-aws-key-name"
+  ssh_public_key       = "ssh-ed25519 MYPUBLICKEY..."
+  nifi_node_count      = 3
+  nifi_zookeeper_count = 2
 }
 ```
 
