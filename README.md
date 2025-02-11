@@ -19,7 +19,7 @@ module "nifi" {
 }
 ```
 
-Create your cluster
+Create your cluster.
 
 ```
 terraform init
