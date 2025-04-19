@@ -1,7 +1,5 @@
 # terraform-aws-nifi
 
-## Getting started
-
 Create a `main.tf`.
 
 ```
