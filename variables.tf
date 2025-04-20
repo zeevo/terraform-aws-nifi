@@ -1,9 +1,9 @@
-variable "ssh_key_name" {
+variable "nifi_ssh_key_name" {
   type        = string
   description = "SSH Keypair name for SSH access"
 }
 
-variable "ssh_public_key" {
+variable "nifi_ssh_public_key" {
   type        = string
   description = "SSH Public key for SSH access"
 }
@@ -26,13 +26,13 @@ variable "nifi_ami" {
   description = "The NiFi node AMI"
 }
 
-variable "zookeeper_instance_type" {
+variable "nifi_zookeeper_instance_type" {
   type        = string
   default     = "t2.medium"
   description = "The ZooKeeper instance type"
 }
 
-variable "zookeeper_ami" {
+variable "nifi_zookeeper_ami" {
   type        = string
   default     = "ami-058bd2d568351da34"
   description = "The ZooKeeper AMI"
@@ -44,14 +44,38 @@ variable "nifi_zookeeper_count" {
   description = "The ZooKeeper cluster node count"
 }
 
-variable "nifi_name" {
+variable "nifi_node_name" {
   type        = string
   default     = "nifi"
   description = "The EC2 name for NiFi nodes"
 }
 
-variable "zookeeper_name" {
+variable "nifi_node_roles" {
+  type        = list(string)
+  default     = ["nifi"]
+  description = "The roles to assign to the NiFi nodes"
+}
+
+variable "nifi_zookeeper_roles" {
+  type        = list(string)
+  default     = ["zookeeper"]
+  description = "The roles to assign to ZooKeeper nodes"
+}
+
+variable "nifi_zookeeper_name" {
   type        = string
   default     = "zookeeper"
   description = "The EC2 name for ZooKeeper nodes"
+}
+
+variable "nifi_node_root_block_volume_size" {
+  type        = number
+  default     = 20
+  description = "The amount of storage of NiFi's root block device"
+}
+
+variable "nifi_zookeeper_root_block_volume_size" {
+  type        = number
+  default     = 20
+  description = "The amount of storage of ZooKeeper's root block device"
 }

@@ -1,29 +1,32 @@
-resource "aws_key_pair" "ssh_key" {
-  key_name   = var.ssh_key_name
-  public_key = var.ssh_public_key
+resource "aws_key_pair" "nifi_ssh" {
+  key_name   = var.nifi_ssh_key_name
+  public_key = var.nifi_ssh_public_key
 }
 
 resource "aws_instance" "node" {
   ami           = var.nifi_ami
   instance_type = var.nifi_instance_type
-  key_name      = aws_key_pair.ssh_key.key_name
+  key_name      = aws_key_pair.nifi_ssh.key_name
   tags = {
-    Name = "${var.nifi_name}-${count.index}"
-    Role = "nifi"
+    Name  = "${var.nifi_node_name}-${count.index}"
+    roles = jsonencode(var.nifi_node_roles)
+  }
+  root_block_device {
+    volume_size = var.nifi_node_root_block_volume_size
   }
   count = var.nifi_node_count
-  root_block_device {
-    volume_size = 20
-  }
 }
 
 resource "aws_instance" "zookeeper" {
-  ami           = var.zookeeper_ami
-  instance_type = var.zookeeper_instance_type
-  key_name      = aws_key_pair.ssh_key.key_name
+  ami           = var.nifi_zookeeper_ami
+  instance_type = var.nifi_zookeeper_instance_type
+  key_name      = aws_key_pair.nifi_ssh.key_name
   tags = {
-    Name = "${var.zookeeper_name}-${count.index}"
-    Role = "zookeeper"
+    Name  = "${var.nifi_zookeeper_name}-${count.index}"
+    roles = jsonencode(var.nifi_zookeeper_roles)
+  }
+  root_block_device {
+    volume_size = var.nifi_zookeeper_root_block_volume_size
   }
   count = var.nifi_zookeeper_count
 }
