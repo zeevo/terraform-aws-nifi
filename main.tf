@@ -3,7 +3,7 @@ resource "aws_key_pair" "nifi_ssh" {
   public_key = var.nifi_ssh_public_key
 }
 
-resource "aws_instance" "node" {
+resource "aws_instance" "nifi_node" {
   ami           = var.nifi_ami
   instance_type = var.nifi_instance_type
   key_name      = aws_key_pair.nifi_ssh.key_name
@@ -16,6 +16,7 @@ resource "aws_instance" "node" {
   }
   count = var.nifi_node_count
 }
+
 
 resource "aws_instance" "zookeeper" {
   ami           = var.nifi_zookeeper_ami
@@ -35,7 +36,7 @@ resource "aws_security_group" "all" {
   name = "nifi"
 }
 
-resource "aws_security_group" "nodes" {
+resource "aws_security_group" "nifi_nodes" {
   name = "nifi_nodes"
   ingress = [
     {
@@ -85,7 +86,7 @@ resource "aws_security_group" "nodes" {
   ]
 }
 
-resource "aws_security_group" "zookeeper" {
+resource "aws_security_group" "nifi_zookeeper" {
   name = "nifi_zookeeper"
   ingress = [
     {
@@ -136,19 +137,19 @@ resource "aws_security_group" "zookeeper" {
 }
 
 resource "aws_network_interface_sg_attachment" "nifi_security_group_attachment" {
-  security_group_id    = aws_security_group.nodes.id
-  network_interface_id = aws_instance.node[count.index].primary_network_interface_id
+  security_group_id    = aws_security_group.nifi_nodes.id
+  network_interface_id = aws_instance.nifi_node[count.index].primary_network_interface_id
   count                = var.nifi_node_count
 }
 
 resource "aws_network_interface_sg_attachment" "all_nodes_security_group_attachement" {
   security_group_id    = aws_security_group.all.id
-  network_interface_id = aws_instance.node[count.index].primary_network_interface_id
+  network_interface_id = aws_instance.nifi_node[count.index].primary_network_interface_id
   count                = var.nifi_node_count
 }
 
 resource "aws_network_interface_sg_attachment" "zookeeper_primary_security_group_attachment" {
-  security_group_id    = aws_security_group.zookeeper.id
+  security_group_id    = aws_security_group.nifi_zookeeper.id
   network_interface_id = aws_instance.zookeeper[count.index].primary_network_interface_id
   count                = var.nifi_zookeeper_count
 }
