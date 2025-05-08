@@ -8,7 +8,7 @@ resource "aws_instance" "nifi_node" {
   instance_type = var.nifi_instance_type
   key_name      = aws_key_pair.nifi_ssh.key_name
   tags = {
-    Name  = "${var.nifi_node_name}-${count.index}"
+    Name  = "${var.nifi_name}-node-${count.index}"
     roles = jsonencode(var.nifi_node_roles)
   }
   root_block_device {
@@ -23,7 +23,7 @@ resource "aws_instance" "zookeeper" {
   instance_type = var.nifi_zookeeper_instance_type
   key_name      = aws_key_pair.nifi_ssh.key_name
   tags = {
-    Name  = "${var.nifi_zookeeper_name}-${count.index}"
+    Name  = "${var.nifi_name}-zookeeper-${count.index}"
     roles = jsonencode(var.nifi_zookeeper_roles)
   }
   root_block_device {
@@ -33,11 +33,11 @@ resource "aws_instance" "zookeeper" {
 }
 
 resource "aws_security_group" "all" {
-  name = "nifi"
+  name = "${var.nifi_name}_all_sg"
 }
 
 resource "aws_security_group" "nifi_nodes" {
-  name = "nifi_nodes"
+  name = "${var.nifi_name}_nifi_nodes"
   ingress = [
     {
       description      = "SSH"
@@ -87,7 +87,7 @@ resource "aws_security_group" "nifi_nodes" {
 }
 
 resource "aws_security_group" "nifi_zookeeper" {
-  name = "nifi_zookeeper"
+  name = "${var.nifi_name}_zookeeper_nodes"
   ingress = [
     {
       description      = "SSH"

@@ -1,3 +1,9 @@
+variable "nifi_name" {
+  type        = string
+  default     = "nifi"
+  description = "A unique name for the project"
+}
+
 variable "nifi_ssh_key_name" {
   type        = string
   description = "SSH Keypair name for SSH access"
@@ -44,12 +50,6 @@ variable "nifi_zookeeper_count" {
   description = "The ZooKeeper cluster node count"
 }
 
-variable "nifi_node_name" {
-  type        = string
-  default     = "nifi"
-  description = "The EC2 name for NiFi nodes"
-}
-
 variable "nifi_node_roles" {
   type        = list(string)
   default     = ["nifi"]
@@ -60,12 +60,6 @@ variable "nifi_zookeeper_roles" {
   type        = list(string)
   default     = ["zookeeper"]
   description = "The roles to assign to ZooKeeper nodes"
-}
-
-variable "nifi_zookeeper_name" {
-  type        = string
-  default     = "zookeeper"
-  description = "The EC2 name for ZooKeeper nodes"
 }
 
 variable "nifi_node_root_block_volume_size" {
