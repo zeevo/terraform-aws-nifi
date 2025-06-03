@@ -4,11 +4,6 @@ variable "nifi_name" {
   description = "A unique name for the project"
 }
 
-variable "nifi_ssh_key_name" {
-  type        = string
-  description = "SSH Keypair name for SSH access"
-}
-
 variable "nifi_ssh_public_key" {
   type        = string
   description = "SSH Public key for SSH access"

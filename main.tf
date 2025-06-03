@@ -1,5 +1,5 @@
 resource "aws_key_pair" "nifi_ssh" {
-  key_name   = var.nifi_ssh_key_name
+  key_name   = "${var.nifi_name}_ssh_key"
   public_key = var.nifi_ssh_public_key
 }
 
