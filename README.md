@@ -7,13 +7,17 @@ provider "aws" {
   region = "us-east-1"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 module "nifi" {
-  source                    = "zeevo/nifi/aws"
-  version                   = "0.2.0"
-  nifi_ssh_key_name         = "my-aws-key-name"
-  nifi_ssh_public_key       = "ssh-ed25519 MYPUBLICKEY..."
-  nifi_node_count           = 3
-  nifi_zookeeper_count      = 1
+  source               = "zeevo/nifi/aws"
+  nifi_name            = "nifi"
+  nifi_ssh_public_key  = "ssh-ed25519 MYPUBLICKEY..."
+  nifi_node_roles      = ["nifi", "docker"]
+  nifi_node_count      = 1
+  nifi_zookeeper_count = 1
 }
 ```
 
