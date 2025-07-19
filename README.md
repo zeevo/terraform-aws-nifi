@@ -7,7 +7,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "nifi" {
 provider "aws" {
   region = "us-east-1"
 }
