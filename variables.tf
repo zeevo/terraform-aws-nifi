@@ -68,3 +68,15 @@ variable "nifi_zookeeper_root_block_volume_size" {
   default     = 20
   description = "The amount of storage of ZooKeeper's root block device"
 }
+
+variable "nifi_subnet_id" {
+  type        = string
+  description = "The ID of the subnet to launch the NiFi instances into"
+  default     = null
+}
+
+variable "nifi_vpc_id" {
+  type        = string
+  description = "The ID of the VPC to launch the NiFi instances into"
+  default     = null
+}

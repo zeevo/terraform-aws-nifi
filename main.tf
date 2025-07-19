@@ -7,6 +7,7 @@ resource "aws_instance" "nifi_node" {
   ami           = var.nifi_ami
   instance_type = var.nifi_instance_type
   key_name      = aws_key_pair.nifi_ssh.key_name
+  subnet_id     = var.nifi_subnet_id != null ? var.nifi_subnet_id : null
   tags = {
     Name  = "${var.nifi_name}-node-${count.index}"
     roles = jsonencode(var.nifi_node_roles)
@@ -22,6 +23,7 @@ resource "aws_instance" "zookeeper" {
   ami           = var.nifi_zookeeper_ami
   instance_type = var.nifi_zookeeper_instance_type
   key_name      = aws_key_pair.nifi_ssh.key_name
+  subnet_id     = var.nifi_subnet_id != null ? var.nifi_subnet_id : null
   tags = {
     Name  = "${var.nifi_name}-zookeeper-${count.index}"
     roles = jsonencode(var.nifi_zookeeper_roles)
@@ -33,11 +35,13 @@ resource "aws_instance" "zookeeper" {
 }
 
 resource "aws_security_group" "all" {
-  name = "${var.nifi_name}_all_sg"
+  name   = "${var.nifi_name}_all_sg"
+  vpc_id = var.nifi_vpc_id != null ? var.nifi_vpc_id : null
 }
 
 resource "aws_security_group" "nifi_nodes" {
-  name = "${var.nifi_name}_nifi_nodes"
+  name   = "${var.nifi_name}_nifi_nodes"
+  vpc_id = var.nifi_vpc_id != null ? var.nifi_vpc_id : null
   ingress = [
     {
       description      = "SSH"
@@ -87,7 +91,9 @@ resource "aws_security_group" "nifi_nodes" {
 }
 
 resource "aws_security_group" "nifi_zookeeper" {
-  name = "${var.nifi_name}_zookeeper_nodes"
+  name   = "${var.nifi_name}_zookeeper_nodes"
+  vpc_id = var.nifi_vpc_id != null ? var.nifi_vpc_id : null
+
   ingress = [
     {
       description      = "SSH"
